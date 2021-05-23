@@ -1,10 +1,9 @@
 const router = require('koa-router')()
-const consoleLogger = require('../logger').consoleLogger
 
 router.prefix('/test')
 
-router.post('/ws', function (ctx, next) {
-    consoleLogger.info('body: ' + ctx.request.body);
+router.get('/ws', function (ctx, next) {
+    consoleLogger.info('query: ' + JSON.stringify(ctx.query));
     ctx.body = {
         success: true
     };

@@ -14,7 +14,9 @@ const indexRouters = require('./routes/index')
 const usersRouters = require('./routes/users')
 const testRouters = require('./routes/test')
 const wsRouters = require('./routes/ws')
-const consoleLogger = require('./logger').consoleLogger
+
+global._ = require('lodash');
+global.consoleLogger = require('./logger').consoleLogger;
 
 const app = websockify(new Koa());
 
@@ -57,8 +59,5 @@ app.use(testRouters.routes(), testRouters.allowedMethods());
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 });
-
-global.qqUtils = require('./utils/qq.utils');
-global._ = require('lodash');
 
 module.exports = app;
