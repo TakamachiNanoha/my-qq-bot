@@ -1,6 +1,7 @@
 const router = require('koa-router')()
 const cqhttp = require('../utils/cqhttp.utils')
 const plugins = ['stock'];
+const postType = ['message', 'notice', 'request'];
 
 const bot_qq_number = "262174358";
 
@@ -10,6 +11,11 @@ router.all('/ws', async function (ctx) {
     ctx.websocket.on('message', function (event) {
         consoleLogger.info('[go-cqhttp] event: ' + event);
         event = JSON.parse(event);
+
+        if (postType.indexOf(event.post_type) < 0) {
+            consoleLogger.info('不支持的post类型');
+            return;
+        }
 
         if (event.message.indexOf(`[CQ:at,qq=${bot_qq_number}]`) < 0) {
             return;

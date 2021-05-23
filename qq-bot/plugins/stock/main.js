@@ -1,4 +1,5 @@
 const axios = require('axios')
+const iconv = require('iconv-lite')
 
 async function main(event, callback) {
     const message = _.get(event, 'message');
@@ -15,7 +16,10 @@ async function main(event, callback) {
     }
 
     const url = `http://hq.sinajs.cn/list=${stockCode}`;
-    const result = await axios.get(url);
+    const result = await axios.get(url, {
+        responseType: 'arraybuffer'
+    });
+    result.data = iconv.decode(result.data, 'gbk');
     //consoleLogger.info(result.data);
 
     const stockDate = result.data.split('\"')[1];
