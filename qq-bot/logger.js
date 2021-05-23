@@ -36,15 +36,9 @@ log4js.configure({
     }
 })
 
-function getOutLogger() {
-    return log4js.getLogger('out');
-}
-
-function getOutKoaLogger() {
-    return log4js.koaLogger(log4js.getLogger('out'));
-}
+const consoleLogger = log4js.getLogger('out');
+//const koaConsoleLogger = log4js.koaLogger(log4js.getLogger('out'));
 
 module.exports = {
-    getOutLogger: getOutLogger,
-    getOutKoaLogger: getOutKoaLogger
+    consoleLogger: consoleLogger
 }

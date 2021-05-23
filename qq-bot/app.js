@@ -10,12 +10,13 @@ const fs = require('fs')
 const websockify = require('koa-websocket')
 const moment = require('moment')
 
-const index = require('./routes/index')
-const users = require('./routes/users')
-const ws = require('./routes/ws')
+const indexRouters = require('./routes/index')
+const usersRouters = require('./routes/users')
+const testRouters = require('./routes/test')
+const wsRouters = require('./routes/ws')
 
-const logger = require('./logger')
-const outLogger = logger.getOutLogger();
+global._ = require('lodash');
+global.consoleLogger = require('./logger').consoleLogger;
 
 const app = websockify(new Koa());
 
@@ -24,7 +25,7 @@ app.ws.use(function (ctx, next) {
   return next(ctx);
 });
 
-app.ws.use(ws.routes(), ws.allowedMethods());
+app.ws.use(wsRouters.routes(), wsRouters.allowedMethods());
 
 // error handler
 onerror(app);
@@ -35,7 +36,6 @@ app.use(bodyparser({
 }));
 app.use(json());
 //app.use(logger());
-//app.use(logger.getOutKoaLogger());
 app.use(require('koa-static')(__dirname + '/public'));
 
 app.use(views(__dirname + '/views', {
@@ -47,12 +47,13 @@ app.use(async (ctx, next) => {
   const start = new Date()
   await next()
   const ms = new Date() - start
-  outLogger.info(`${ctx.method} ${ctx.url} - ${ms}ms`)
+  consoleLogger.info(`${ctx.method} ${ctx.url} - ${ms}ms`)
 });
 
 // routes
-app.use(index.routes(), index.allowedMethods());
-app.use(users.routes(), users.allowedMethods());
+app.use(indexRouters.routes(), indexRouters.allowedMethods());
+app.use(usersRouters.routes(), usersRouters.allowedMethods());
+app.use(testRouters.routes(), testRouters.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {
