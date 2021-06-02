@@ -55,7 +55,7 @@ function addPrefix(stockCode) {
         return stockCode;
     }
 
-    if (/^000|^002|^003|^300/.test(stockCode)) {
+    if (/^000|^001|^002|^003|^300/.test(stockCode)) {
         stockCode = 'sz' + stockCode;
         return stockCode;
     }
